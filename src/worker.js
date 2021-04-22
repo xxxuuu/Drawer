@@ -1,9 +1,9 @@
 import event from './event-topic';
 import db from './db';
 
-const { clipboard, ipcRenderer } = window.require('electron');
+const { clipboard, ipcRenderer, remote } = window.require('electron');
 
-function listen() {
+async function listen() {
   const formats = clipboard.availableFormats();
   // ipcRenderer.send(event.LOG, formats);
 
@@ -16,8 +16,13 @@ function listen() {
     // 文件
     info.data = filePath;
     info.type = 'file';
-    // TODO: 获取预览图在某些类型的文件上不生效
-    info.preview = clipboard.readImage('png').toDataURL();
+    const previewImg = clipboard.readImage('png');
+    if (previewImg.isEmpty()) {
+      // TODO: 获取预览图在某些类型的文件上不生效 只能先获取图标
+      info.preview = (await remote.app.getFileIcon(filePath)).toDataURL();
+    } else {
+      info.preview = previewImg.toDataURL();
+    }
     info.description = filePath;
   } else if (formats.indexOf('text/rtf') >= 0) {
     // RTF 富文本

@@ -19,6 +19,7 @@ async function createWorker() {
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
+      enableRemoteModule: true,
     },
   });
 
