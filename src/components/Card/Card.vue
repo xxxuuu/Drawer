@@ -5,7 +5,9 @@
       <span class="time">{{ info.time | dateFormat }}</span>
     </div>
     <component ref="cardInstance" :is="switchCard" :info="info"/>
-    <div class="footer">{{ info.description }}</div>
+    <div class="footer">
+      <div class="decription">{{ info.description }}</div>
+    </div>
   </div>
 </template>
 
@@ -119,4 +121,6 @@ export default {
     width 100%
     display flex
     justify-content center
+    .decription
+      margin 0 15px
 </style>
