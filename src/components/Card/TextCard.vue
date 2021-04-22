@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     replaceSpace() {
-      return this.data.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>').replace(/ /g, '&nbsp;');
+      return this.info.data.replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/\n/g, '<br/>').replace(/ /g, '&nbsp;');
     },
   },
 };

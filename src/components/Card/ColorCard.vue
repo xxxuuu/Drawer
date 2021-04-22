@@ -1,7 +1,7 @@
 <template>
   <div class="color-card"
-      :style="{ background: data }">
-    <div class="color-code">{{ data.toUpperCase() }}</div>
+      :style="{ background: info.data }">
+    <div class="color-code">{{ info.data.toUpperCase() }}</div>
   </div>
 </template>
 

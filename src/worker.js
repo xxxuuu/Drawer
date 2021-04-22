@@ -10,11 +10,14 @@ function listen() {
   const timestamp = Date.parse(new Date());
   const info = {};
 
-  const filePath = clipboard.read('public.file-url').replace('file://', '');
+  let filePath = clipboard.read('public.file-url').replace('file://', '');
   if (filePath) {
+    filePath = decodeURI(filePath);
     // 文件
     info.data = filePath;
     info.type = 'file';
+    // TODO: 获取预览图在某些类型的文件上不生效
+    info.preview = clipboard.readImage('png').toDataURL();
     info.description = filePath;
   } else if (formats.indexOf('text/rtf') >= 0) {
     // RTF 富文本

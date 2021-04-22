@@ -19,7 +19,7 @@ export default {
   },
   created() {
     RTFJS.loggingEnabled(false);
-    this.doc = new RTFJS.Document(this.stringToArrayBuffer(this.data));
+    this.doc = new RTFJS.Document(this.stringToArrayBuffer(this.info.data));
     this.doc.render().then((elements) => {
       // console.log(elements);
       elements.forEach((e) => {

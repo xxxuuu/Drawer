@@ -1,8 +1,8 @@
 <template>
   <div class="root">
     <div class="header">
-      <!-- <div class="search">🔍</div>
-      <tags class="tags" :tags="['📝 剪贴板历史']" /> -->
+      <!-- <div class="search">🔍</div> -->
+      <tags class="tags" :tags="['📝 剪贴板历史']" />
       <!-- <div class="add-tag">➕</div> -->
     </div>
     <div class="content">
@@ -16,14 +16,14 @@
 <script>
 import event from '@/event-topic';
 import card from '@/components/Card/Card.vue';
-// import tags from '@/components/Tags.vue';
+import tags from '@/components/Tags.vue';
 
 const { ipcRenderer } = window.require('electron');
 
 export default {
   components: {
     card,
-    // tags,
+    tags,
   },
   data() {
     return {

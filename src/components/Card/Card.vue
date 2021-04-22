@@ -4,7 +4,7 @@
       {{ this.title }}
       <span class="time">{{ info.time | dateFormat }}</span>
     </div>
-    <component :is="switchCard" :data="info.data"/>
+    <component ref="cardInstance" :is="switchCard" :info="info"/>
     <div class="footer">{{ info.description }}</div>
   </div>
 </template>
@@ -15,8 +15,6 @@ import TextCard from './TextCard.vue';
 import ColorCard from './ColorCard.vue';
 import FileCard from './FileCard.vue';
 import RtfCard from './RtfCard.vue';
-
-const { clipboard, nativeImage } = window.require('electron');
 
 export default {
   props: [
@@ -36,18 +34,7 @@ export default {
   methods: {
     // 从卡片中复制
     copyOnCard() {
-      // TODO: 不同类型复制信息的优化
-      if (this.info.type === 'image') {
-        clipboard.writeImage(nativeImage.createFromDataURL(this.info.data));
-        new Notification('复制成功', {
-          body: '已复制到剪贴板：「图片」',
-        }).show();
-      } else {
-        clipboard.writeText(this.info.data);
-        new Notification('复制成功', {
-          body: `已复制到剪贴板：${this.info.data}`,
-        }).show();
-      }
+      this.$refs.cardInstance.copyOnCard();
     },
   },
   filters: {
@@ -109,7 +96,6 @@ export default {
     display flex
     align-items center
     position relative
-    height 40px
     background #eaeaea
     padding 5px 10px
     font-size 20px
