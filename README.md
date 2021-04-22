@@ -1,6 +1,5 @@
-# drawer
-drawer 是一个 macOS 下的历史剪贴板应用
-
+# Drawer
+Drawer 是一个 macOS 上的历史剪贴板应用，基于 Electron + Vue
 
 ## TODO
 - [ ] 标签
