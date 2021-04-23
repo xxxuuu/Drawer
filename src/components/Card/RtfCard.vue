@@ -1,6 +1,6 @@
 <template>
   <div class="rtf-card">
-    <div class="content" v-html="rtfHtml"></div>
+    <div class="content" v-html="rtfHtml" ref="rtf"></div>
     <div class="bg"></div>
   </div>
 </template>
@@ -8,6 +8,8 @@
 <script>
 import { RTFJS } from 'rtf.js';
 import BaseCard from './BaseCard.vue';
+
+const { clipboard } = window.require('electron');
 
 export default {
   mixins: [BaseCard],
@@ -38,6 +40,15 @@ export default {
         bufferView[i] = string.charCodeAt(i);
       }
       return buffer;
+    },
+    copyOnCard() {
+      clipboard.write({
+        text: this.$refs.rtf.textContent,
+        rtf: this.info.data,
+      });
+      new Notification('复制成功', {
+        body: `已复制到剪贴板：${this.$refs.rtf.textContent}`,
+      }).show();
     },
   },
 };
