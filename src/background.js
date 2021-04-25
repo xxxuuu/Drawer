@@ -19,7 +19,7 @@ global.winId = {
 // worker进程 通过隐藏窗口实现
 async function createWorker() {
   const worker = new BrowserWindow({
-    // show: false,
+    show: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -39,20 +39,24 @@ async function createWorker() {
 // 主窗口实例
 let mainWindow = null;
 async function createWindow() {
-  const { width, height } = screen.getPrimaryDisplay().size;
+  const screenSize = screen.getPrimaryDisplay().size;
+  const screenWidth = screenSize.width;
+  const screenHeight = screenSize.height;
+  const height = 350;
+  const windowY = screenHeight - height;
 
   if (mainWindow) {
     mainWindow.show();
-    mainWindow.setPosition(0, height - 350, true);
+    mainWindow.setPosition(0, windowY, true);
     return;
   }
 
   // Create the browser window.
   const win = new BrowserWindow({
-    width,
-    height: 350,
+    width: screenWidth,
+    height,
     x: 0,
-    y: height - 350,
+    y: windowY,
     frame: false,
     movable: false,
     show: false,
@@ -73,16 +77,13 @@ async function createWindow() {
     win.hide();
   });
   win.setAlwaysOnTop(true, 'pop-up-menu');
-  win.setPosition(0, height - 350, true);
-  console.log(win.id);
+  win.setPosition(0, windowY, true);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
-    // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
     // if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol('app');
-    // Load the index.html when not in development
     win.loadURL('app://./index.html');
   }
 }
