@@ -37,6 +37,9 @@ export default {
     ipcRenderer.on(event.APPEND, (e, data) => {
       this.clipboardList.unshift(data);
     });
+    ipcRenderer.on(event.DELETE_OLD, (e, len) => {
+      this.clipboardList = this.clipboardList.slice(0, this.clipboardList.length - len);
+    });
   },
 };
 </script>

@@ -12,6 +12,10 @@ protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } },
 ]);
 
+global.winId = {
+  mainWindow: null,
+};
+
 // worker进程 通过隐藏窗口实现
 async function createWorker() {
   const worker = new BrowserWindow({
@@ -64,6 +68,7 @@ async function createWindow() {
   });
 
   mainWindow = win;
+  global.winId.mainWindow = win.id;
   win.on('blur', () => {
     win.hide();
   });

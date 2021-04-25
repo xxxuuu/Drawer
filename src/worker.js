@@ -64,7 +64,7 @@ async function listen() {
   // 插入成功就通知前端更新
   db.store(info).then((res) => {
     if (res) {
-      ipcRenderer.sendTo(2, event.APPEND, info);
+      ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.APPEND, info);
     }
   });
 
@@ -73,7 +73,6 @@ async function listen() {
 
 // 第一次首先获取数据库所有数据 然后开始监听
 db.getAll().then((res) => {
-  // TODO: mainWindow的ID写死了2 以后再优化这里
-  ipcRenderer.sendTo(2, event.INIT, res);
+  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.INIT, res);
   setTimeout(listen, 1000);
 });

@@ -1,4 +1,7 @@
 import { openDB } from 'idb';
+import event from './event-topic';
+
+const { ipcRenderer, remote } = window.require('electron');
 
 // const path = require('path');
 // const os = require('os');
@@ -47,7 +50,11 @@ async function clearOutdated() {
   // 一天的毫秒数
   const day = 1000 * 60 * 60 * 24;
   // time作为主键，小于这个范围的全部删掉
+  const delLen = (await (await db).getAll(STORE_NAME,
+    IDBKeyRange.upperBound(timestamp - day))).length;
   await (await db).delete(STORE_NAME, IDBKeyRange.upperBound(timestamp - day));
+  // 需要通知前端删除列表UI上的相关部分
+  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.DELETE_OLD, delLen);
   setTimeout(clearOutdated, 10000);
 }
 clearOutdated();
