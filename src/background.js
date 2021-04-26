@@ -77,6 +77,7 @@ async function createWindow() {
     win.hide();
   });
   win.setAlwaysOnTop(true, 'pop-up-menu');
+  win.setVisibleOnAllWorkspaces(true);
   win.setPosition(0, windowY, true);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
