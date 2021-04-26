@@ -46,8 +46,11 @@ async function createWindow() {
   const windowY = screenHeight - height;
 
   if (mainWindow) {
+    // 令其能显示在当前桌面（工作区）：https://github.com/electron/electron/issues/5362
+    mainWindow.setVisibleOnAllWorkspaces(true);
     mainWindow.show();
     mainWindow.setPosition(0, windowY, true);
+    mainWindow.setVisibleOnAllWorkspaces(false);
     return;
   }
 
@@ -75,9 +78,9 @@ async function createWindow() {
   global.winId.mainWindow = win.id;
   win.on('blur', () => {
     win.hide();
+    app.dock.hide();
   });
   win.setAlwaysOnTop(true, 'pop-up-menu');
-  win.setVisibleOnAllWorkspaces(true);
   win.setPosition(0, windowY, true);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
