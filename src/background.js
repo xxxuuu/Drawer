@@ -1,8 +1,9 @@
 import {
-  app, protocol, BrowserWindow, globalShortcut, ipcMain, screen,
+  app, protocol, BrowserWindow, globalShortcut, ipcMain, screen, Tray, Menu,
 } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
+import path from 'path';
 import event from './event-topic';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -38,6 +39,7 @@ async function createWorker() {
 
 // 主窗口实例
 let mainWindow = null;
+let tray = null;
 async function createWindow() {
   const screenSize = screen.getPrimaryDisplay().size;
   const screenWidth = screenSize.width;
@@ -104,6 +106,14 @@ app.whenReady().then(() => {
   ipcMain.on(event.LOG, (e, args) => {
     console.log(args);
   });
+
+  // 创建托盘
+  // eslint-disable-next-line no-undef
+  tray = new Tray(path.join(__static, 'tray_icon.png'));
+  const contextMenu = Menu.buildFromTemplate([
+    { label: '关闭 Drawer', type: 'normal', click: app.quit },
+  ]);
+  tray.setContextMenu(contextMenu);
 
   createWorker();
   // 全局快捷键 弹出窗口
