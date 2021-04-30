@@ -29,15 +29,23 @@ async function getAll() {
   return (await db).getAll(STORE_NAME);
 }
 
-async function store(value) {
-  // 和最后一个是否重复
+async function getLast() {
   const cursor = await (await db).transaction(STORE_NAME).store.openCursor(null, 'prev');
 
   if (cursor) {
-    if (cursor.value.data === value.data) {
-      // 返回插入失败
-      return false;
-    }
+    return cursor.value;
+  }
+  return null;
+}
+
+async function store(value) {
+  // 和最后一个是否重复
+  // TODO: 如果最后一个是图片等大数据项 可能导致高负载
+  const last = await getLast();
+
+  if (last.data === value.data) {
+    // 返回插入失败
+    return false;
   }
   // 插入成功
   (await db).add(STORE_NAME, value);
@@ -59,4 +67,4 @@ async function clearOutdated() {
 }
 clearOutdated();
 
-export default { getAll, store };
+export default { getAll, getLast, store };
