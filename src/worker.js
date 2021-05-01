@@ -37,10 +37,14 @@ async function listen() {
     info.type = 'image';
     info.description = `${size.width} × ${size.height} 像素`;
   } else {
+    const text = clipboard.readText();
+    if (text === '') {
+      setTimeout(listen, 1000);
+      return;
+    }
+
     const colorPattern = /^#[0-9A-Fa-f]{6}$/;
     const urlPattern = /^(http|https):\/\/.+/;
-    const text = clipboard.readText();
-
     if (text.search(colorPattern) >= 0) {
       // 颜色
       info.data = text;
