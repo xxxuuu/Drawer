@@ -20,7 +20,7 @@ global.winId = {
 // worker进程 通过隐藏窗口实现
 async function createWorker() {
   const worker = new BrowserWindow({
-    show: false,
+    show: process.env.WEBPACK_DEV_SERVER_URL,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
