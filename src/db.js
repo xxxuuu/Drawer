@@ -43,7 +43,7 @@ async function store(value) {
   // TODO: 如果最后一个是图片等大数据项 可能导致高负载
   const last = await getLast();
 
-  if (last.data === value.data) {
+  if (last && last.data === value.data) {
     // 返回插入失败
     return false;
   }
