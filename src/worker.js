@@ -7,7 +7,7 @@ async function listen() {
   const formats = clipboard.availableFormats();
   // ipcRenderer.send(event.LOG, formats);
 
-  const timestamp = Date.parse(new Date());
+  const timestamp = Date.now();
   const info = {};
 
   let filePath = clipboard.read('public.file-url').replace('file://', '');
