@@ -1,9 +1,12 @@
 import event from './event-topic';
 import db from './db';
 
+const path = window.require('path');
+const { exec } = window.require('child_process');
+
 const { clipboard, ipcRenderer, remote } = window.require('electron');
 
-async function listen() {
+async function updateClipboard() {
   const formats = clipboard.availableFormats();
   // ipcRenderer.send(event.LOG, formats);
 
@@ -39,7 +42,6 @@ async function listen() {
   } else {
     const text = clipboard.readText();
     if (text === '') {
-      setTimeout(listen, 1000);
       return;
     }
 
@@ -71,12 +73,19 @@ async function listen() {
       ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.APPEND, info);
     }
   });
+}
 
-  setTimeout(listen, 1000);
+function nativeListen() {
+  // eslint-disable-next-line no-undef
+  const childProcess = exec(path.join(__static, 'clipboard-listen'));
+  childProcess.stdout.on('data', (data) => {
+    console.log(data);
+    updateClipboard();
+  });
 }
 
 // 第一次首先获取数据库所有数据 然后开始监听
 db.getAll().then((res) => {
   ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.INIT, res);
-  setTimeout(listen, 1000);
+  nativeListen();
 });
