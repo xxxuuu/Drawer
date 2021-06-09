@@ -23,4 +23,12 @@ module.exports = {
       title: 'Worker',
     },
   },
+  pluginOptions: {
+    electronBuilder: {
+      builderOptions: {
+        productName: 'Drawer',
+        asar: false,
+      },
+    },
+  },
 };

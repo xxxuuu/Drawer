@@ -3,6 +3,7 @@ import db from './db';
 
 const path = window.require('path');
 const { exec } = window.require('child_process');
+const fs = window.require('fs');
 
 const { clipboard, ipcRenderer, remote } = window.require('electron');
 
@@ -77,7 +78,14 @@ async function updateClipboard() {
 
 function nativeListen() {
   // eslint-disable-next-line no-undef
-  const childProcess = exec(path.join(__static, 'clipboard-listen'));
+  const listenPath = path.join(__static, 'clipboard-listen');
+  try {
+    fs.accessSync(listenPath, fs.constants.X_OK);
+  } catch {
+    fs.chmodSync(listenPath, 0o775);
+  }
+  const childProcess = exec(listenPath);
+  console.log(listenPath);
   childProcess.stdout.on('data', (data) => {
     console.log(data);
     updateClipboard();
