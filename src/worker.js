@@ -30,9 +30,12 @@ async function updateClipboard() {
     info.description = filePath;
   } else if (formats.indexOf('text/rtf') >= 0) {
     // RTF 富文本
-    info.data = clipboard.readRTF();
+    info.data = {
+      rtf: clipboard.readRTF(),
+      text: clipboard.readText(),
+    };
     info.type = 'rtf';
-    info.description = `${clipboard.readText().length} 个字符`;
+    info.description = `${info.data.text.length} 个字符`;
   } else if (formats.indexOf('image/png') >= 0 && !clipboard.readImage().isEmpty()) {
     // 图片
     const img = clipboard.readImage();

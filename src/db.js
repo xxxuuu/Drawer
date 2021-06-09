@@ -40,7 +40,6 @@ async function getLast() {
 
 async function store(value) {
   // 和最后一个是否重复
-  // TODO: 如果最后一个是图片等大数据项 可能导致高负载
   const last = await getLast();
 
   if (last && last.data === value.data) {

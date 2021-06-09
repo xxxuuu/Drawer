@@ -21,11 +21,11 @@ export default {
   },
   created() {
     RTFJS.loggingEnabled(false);
-    this.doc = new RTFJS.Document(this.stringToArrayBuffer(this.info.data));
+    this.doc = new RTFJS.Document(this.stringToArrayBuffer(this.info.data.rtf));
     this.doc.render().then((elements) => {
-      // console.log(elements);
       elements.forEach((e) => {
-        // TODO: 缩进
+        // 渲染tab缩进
+        e.style.whiteSpace = 'pre';
         this.rtfHtml += e.outerHTML;
       });
     }).catch((err) => {
@@ -43,8 +43,8 @@ export default {
     },
     copyOnCard() {
       clipboard.write({
-        text: this.$refs.rtf.textContent,
-        rtf: this.info.data,
+        text: this.info.data.text,
+        rtf: this.info.data.rtf,
       });
       new Notification('复制成功', {
         body: `已复制到剪贴板：${this.$refs.rtf.textContent}`,
