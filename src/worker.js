@@ -93,6 +93,9 @@ function nativeListen() {
     console.log(data);
     updateClipboard();
   });
+  remote.app.on('before-quit', () => {
+    childProcess.kill();
+  });
 }
 
 // 第一次首先获取数据库所有数据 然后开始监听
