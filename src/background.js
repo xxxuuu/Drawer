@@ -1,5 +1,8 @@
 import {
-  app, protocol, BrowserWindow, globalShortcut, ipcMain, screen, Tray, Menu,
+  app, protocol,
+  BrowserWindow, globalShortcut,
+  ipcMain, screen, Tray, Menu,
+  dialog, nativeImage, shell,
 } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
@@ -111,35 +114,37 @@ app.whenReady().then(() => {
   // eslint-disable-next-line no-undef
   tray = new Tray(path.join(__static, 'tray_icon.png'));
   const contextMenu = Menu.buildFromTemplate([
-    { label: '关闭 Drawer', type: 'normal', click: app.quit },
+    {
+      label: '关于 Drawer',
+      type: 'normal',
+      click: () => {
+        dialog.showMessageBox({
+          title: 'Drawer',
+          message: 'Drawer',
+          detail: `${app.getVersion()}\n\nDrawer是一个macOS上的剪贴板应用`,
+          // eslint-disable-next-line no-undef
+          icon: nativeImage.createFromPath(path.join(__static, 'icon_512x512.png')),
+          buttons: ['Github', '好'],
+        }).then((clickIdx) => {
+          if (clickIdx.response === 0) {
+            shell.openExternal('https://github.com/xxxuuu/Drawer');
+          }
+        });
+      },
+    },
+    { type: 'separator' },
+    { label: '退出 Drawer', type: 'normal', click: app.quit },
   ]);
   tray.setContextMenu(contextMenu);
 
   createWorker();
   // 全局快捷键 弹出窗口
+  // TODO: 屏幕分辨率变化 宽度自适应
   globalShortcut.register('Shift+CommandOrControl+V', () => {
     createWindow();
   });
 });
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-});
-
-app.on('activate', () => {
-  // On macOS it's common to re-create a window in the app when the
-  // dock icon is clicked and there are no other windows open.
-  // if (BrowserWindow.getAllWindows().length === 0) createWindow();
-});
-
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
