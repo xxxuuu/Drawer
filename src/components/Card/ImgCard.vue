@@ -30,11 +30,11 @@ export default {
   width 100%
   height 100%
   overflow hidden
-  background-image linear-gradient(45deg,rgba(0,0,0,0.15) 25%,transparent 0,transparent 75%,\
-    rgba(0,0,0,0.15) 0),\
+  background-image \
+    linear-gradient(45deg,rgba(0,0,0,0.15) 25%,transparent 0,transparent 75%,rgba(0,0,0,0.15) 0),\
     linear-gradient(45deg,rgba(0,0,0,0.15) 25%,transparent 0,transparent 75%,rgba(0,0,0,0.15) 0)
-  background-size 16px 16px
-  background-position 0 0, 8px 8px
+  background-size 20px 20px
+  background-position 0 0, 10px 10px
   .img
     height 100%
     width 100%
