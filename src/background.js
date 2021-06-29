@@ -23,7 +23,7 @@ global.winId = {
 // worker进程 通过隐藏窗口实现
 async function createWorker() {
   const worker = new BrowserWindow({
-    show: process.env.WEBPACK_DEV_SERVER_URL,
+    show: isDevelopment,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -102,7 +102,7 @@ async function createWindow() {
 app.dock.hide();
 // 开机自启
 app.setLoginItemSettings({
-  openAtLogin: true,
+  openAtLogin: !isDevelopment,
   openAsHidden: true,
 });
 // 初始化&监听剪贴板
