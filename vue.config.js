@@ -11,13 +11,13 @@ module.exports = {
   },
   pages: {
     index: {
-      entry: 'src/main.js',
+      entry: 'src/render/main.js',
       template: 'public/index.html',
       filename: 'index.html',
       title: 'Drawer',
     },
     worker: {
-      entry: 'src/worker.js',
+      entry: 'src/worker/worker.js',
       template: 'public/worker.html',
       filename: 'worker.html',
       title: 'Worker',

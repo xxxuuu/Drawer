@@ -1,5 +1,5 @@
 import { openDB } from 'idb';
-import event from './event-topic';
+import event from '@/utils/event-topic';
 
 const { ipcRenderer, remote } = window.require('electron');
 

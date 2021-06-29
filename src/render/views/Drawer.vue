@@ -14,9 +14,9 @@
 </template>
 
 <script>
-import event from '@/event-topic';
-import card from '@/components/Card/Card.vue';
-import tags from '@/components/Tags.vue';
+import event from '@/utils/event-topic';
+import card from '@/render/components/Card/Card.vue';
+import tags from '@/render/components/Tags.vue';
 
 const { ipcRenderer } = window.require('electron');
 

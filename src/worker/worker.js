@@ -1,4 +1,4 @@
-import event from './event-topic';
+import event from '@/utils/event-topic';
 import db from './db';
 
 const path = window.require('path');
