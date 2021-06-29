@@ -54,6 +54,7 @@ async function createWindow() {
     // 令其能显示在当前桌面（工作区）：https://github.com/electron/electron/issues/5362
     mainWindow.setVisibleOnAllWorkspaces(true);
     mainWindow.show();
+    mainWindow.setSize(screenWidth, height);
     mainWindow.setPosition(0, windowY, true);
     mainWindow.setVisibleOnAllWorkspaces(false);
     return;
@@ -139,7 +140,6 @@ app.whenReady().then(() => {
 
   createWorker();
   // 全局快捷键 弹出窗口
-  // TODO: 屏幕分辨率变化 宽度自适应
   globalShortcut.register('Shift+CommandOrControl+V', () => {
     createWindow();
   });
