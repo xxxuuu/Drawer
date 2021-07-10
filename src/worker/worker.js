@@ -9,7 +9,6 @@ const { clipboard, ipcRenderer, remote } = window.require('electron');
 
 async function updateClipboard() {
   const formats = clipboard.availableFormats();
-  // ipcRenderer.send(event.LOG, formats);
 
   const timestamp = Date.now();
   const info = {};

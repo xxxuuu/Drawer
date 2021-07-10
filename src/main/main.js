@@ -1,13 +1,9 @@
 import {
-  app, protocol,
-  BrowserWindow, globalShortcut,
-  ipcMain, screen, Tray, Menu,
-  dialog, nativeImage, shell,
+  app, protocol, BrowserWindow, globalShortcut, screen,
 } from 'electron';
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib';
 import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer';
-import path from 'path';
-import event from '@/utils/event-topic';
+import tray from './tray';
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
@@ -33,7 +29,6 @@ async function createWorker() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await worker.loadURL(`${process.env.WEBPACK_DEV_SERVER_URL}worker.html`);
-    // if (!process.env.IS_TEST) worker.webContents.openDevTools();
   } else {
     createProtocol('app');
     worker.loadURL('app://./worker.html');
@@ -42,7 +37,6 @@ async function createWorker() {
 
 // 主窗口实例
 let mainWindow = null;
-let tray = null;
 async function createWindow() {
   const screenSize = screen.getPrimaryDisplay().size;
   const screenWidth = screenSize.width;
@@ -91,14 +85,13 @@ async function createWindow() {
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
-    // if (!process.env.IS_TEST) win.webContents.openDevTools();
   } else {
     createProtocol('app');
     win.loadURL('app://./index.html');
   }
 }
 
-// 隐藏docker栏图标
+// 隐藏dock栏图标
 app.dock.hide();
 // 开机自启
 app.setLoginItemSettings({
@@ -106,68 +99,24 @@ app.setLoginItemSettings({
   openAsHidden: true,
 });
 // 初始化&监听剪贴板
-app.whenReady().then(() => {
-  ipcMain.on(event.LOG, (e, args) => {
-    console.log(args);
-  });
-
-  // 创建托盘
-  // eslint-disable-next-line no-undef
-  tray = new Tray(path.join(__static, 'tray_icon.png'));
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: '关于 Drawer',
-      type: 'normal',
-      click: () => {
-        dialog.showMessageBox({
-          title: 'Drawer',
-          message: 'Drawer',
-          detail: `${app.getVersion()}\n\nDrawer是一个macOS上的剪贴板应用`,
-          // eslint-disable-next-line no-undef
-          icon: nativeImage.createFromPath(path.join(__static, 'icon_512x512.png')),
-          buttons: ['Github', '好'],
-        }).then((clickIdx) => {
-          if (clickIdx.response === 0) {
-            shell.openExternal('https://github.com/xxxuuu/Drawer');
-          }
-        });
-      },
-    },
-    { type: 'separator' },
-    { label: '退出 Drawer', type: 'normal', click: app.quit },
-  ]);
-  tray.setContextMenu(contextMenu);
-
-  createWorker();
-  // 全局快捷键 弹出窗口
-  globalShortcut.register('Shift+CommandOrControl+V', () => {
-    createWindow();
-  });
-});
-
-app.on('ready', async () => {
+app.whenReady().then(async () => {
   if (isDevelopment && !process.env.IS_TEST) {
-    // Install Vue Devtools
     try {
       await installExtension(VUEJS_DEVTOOLS);
     } catch (e) {
       console.error('Vue Devtools failed to install:', e.toString());
     }
   }
+
   createWindow();
+  createWorker();
+  tray.createTray();
+
+  // 全局快捷键 弹出窗口
+  globalShortcut.register('Shift+CommandOrControl+V', createWindow);
 });
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {
-  if (process.platform === 'win32') {
-    process.on('message', (data) => {
-      if (data === 'graceful-exit') {
-        app.quit();
-      }
-    });
-  } else {
-    process.on('SIGTERM', () => {
-      app.quit();
-    });
-  }
+  process.on('SIGTERM', app.quit);
 }
