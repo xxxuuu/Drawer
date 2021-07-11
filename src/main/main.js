@@ -14,6 +14,7 @@ protocol.registerSchemesAsPrivileged([
 
 global.winId = {
   mainWindow: null,
+  worker: null,
 };
 
 // worker进程 通过隐藏窗口实现
@@ -26,6 +27,8 @@ async function createWorker() {
       enableRemoteModule: true,
     },
   });
+
+  global.winId.worker = worker.id;
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await worker.loadURL(`${process.env.WEBPACK_DEV_SERVER_URL}worker.html`);

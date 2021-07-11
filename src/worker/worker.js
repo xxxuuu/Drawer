@@ -71,7 +71,7 @@ async function updateClipboard() {
   info.time = timestamp;
 
   // 插入成功就通知前端更新
-  db.store(info).then((res) => {
+  db.storeClipboard(info).then((res) => {
     if (res) {
       ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.APPEND, info);
     }
@@ -98,7 +98,28 @@ function nativeListen() {
 }
 
 // 第一次首先获取数据库所有数据 然后开始监听
-db.getAll().then((res) => {
+db.getAllClipboard().then((res) => {
   ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.INIT, res);
   nativeListen();
+});
+db.clearOutdatedClipboard();
+
+ipcRenderer.on(event.ADD_TAG, async (e, tagName) => {
+  const tagData = await db.storeTag(tagName);
+  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.ADD_TAG_RESP, tagData);
+});
+
+ipcRenderer.on(event.GET_ALL_TAG, async () => {
+  const tagData = await db.getAllTag();
+  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.GET_ALL_TAG_RESP, tagData);
+});
+
+ipcRenderer.on(event.GET_CLIPBOARD_BY_TAG, async (e, tagId) => {
+  const clipboardData = await db.getClipboardByTag(tagId);
+  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.GET_CLIPBOARD_BY_TAG_RESP, clipboardData);
+});
+
+ipcRenderer.on(event.STORE_CLIPBOARD_TO_TAG, async (e, cardData, tagId) => {
+  await db.storeClipboard2Tag(tagId, cardData);
+  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.STORE_CLIPBOARD_TO_TAG_RESP);
 });

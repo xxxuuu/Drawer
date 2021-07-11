@@ -2,12 +2,16 @@
   <div class="root">
     <div class="header">
       <!-- <div class="search">🔍</div> -->
-      <tags class="tags" :tags="['📝 剪贴板历史']" />
-      <!-- <div class="add-tag">➕</div> -->
+      <tags class="tags" :tags="tags" @add-tag="addTag" @switch-tag="switchTag" />
     </div>
     <div class="content">
       <div class="card-list">
-        <card v-for="(i) in clipboardList" :key="i.time" :info="i"/>
+        <card
+          @contextmenu.native="cardContextMenu(i)"
+          v-for="(i) in activeList"
+          :key="i.time"
+          :info="i"
+        />
       </div>
     </div>
   </div>
@@ -18,7 +22,7 @@ import event from '@/utils/event-topic';
 import card from '@/render/components/Card/Card.vue';
 import tags from '@/render/components/Tags.vue';
 
-const { ipcRenderer } = window.require('electron');
+const { ipcRenderer, remote } = window.require('electron');
 
 export default {
   components: {
@@ -28,18 +32,85 @@ export default {
   data() {
     return {
       clipboardList: [],
+      tagClipboardList: [],
+      tags: [{
+        id: 0,
+        name: '📝 剪贴板历史',
+      }],
+      nowTagIdx: 0,
     };
   },
+  methods: {
+    /** 卡片右键菜单 */
+    cardContextMenu(cardData) {
+      const submenu = this.tags.slice(1).map((item) => {
+        const newItem = item;
+        newItem.label = item.name;
+        newItem.click = () => {
+          // 钉到标签过去
+          ipcRenderer.sendTo(
+            remote.getGlobal('winId').worker,
+            event.STORE_CLIPBOARD_TO_TAG,
+            cardData,
+            item.id,
+          );
+        };
+        return newItem;
+      });
+
+      remote.Menu.buildFromTemplate([{ label: '钉起来', submenu }]).popup();
+    },
+    /** 新增tag */
+    addTag(name) {
+      ipcRenderer.sendTo(remote.getGlobal('winId').worker, event.ADD_TAG, name);
+    },
+    /** 切换tag */
+    switchTag(index) {
+      this.nowTagIdx = index;
+      if (index === 0) {
+        this.tagClipboardList = [];
+        return;
+      }
+      // 切换后查询对应tag的数据
+      ipcRenderer.sendTo(
+        remote.getGlobal('winId').worker,
+        event.GET_CLIPBOARD_BY_TAG,
+        this.tags[this.nowTagIdx].id,
+      );
+    },
+    /** 初始化事件监听 */
+    initEvent() {
+      ipcRenderer.on(event.INIT, (e, data) => {
+        this.clipboardList = data.reverse();
+      });
+      ipcRenderer.on(event.APPEND, (e, data) => {
+        this.clipboardList.unshift(data);
+      });
+      ipcRenderer.on(event.DELETE_OLD, (e, len) => {
+        this.clipboardList = this.clipboardList.slice(0, this.clipboardList.length - len);
+      });
+      ipcRenderer.on(event.ADD_TAG_RESP, (e, tagData) => {
+        this.tags.push(tagData);
+      });
+      ipcRenderer.on(event.GET_ALL_TAG_RESP, (e, tagData) => {
+        this.tags.push(...tagData);
+      });
+      ipcRenderer.on(event.GET_CLIPBOARD_BY_TAG_RESP, (e, clipboards) => {
+        this.tagClipboardList = clipboards;
+      });
+    },
+  },
+  computed: {
+    activeList() {
+      if (this.nowTagIdx === 0) {
+        return this.clipboardList;
+      }
+      return this.tagClipboardList;
+    },
+  },
   created() {
-    ipcRenderer.on(event.INIT, (e, data) => {
-      this.clipboardList = data.reverse();
-    });
-    ipcRenderer.on(event.APPEND, (e, data) => {
-      this.clipboardList.unshift(data);
-    });
-    ipcRenderer.on(event.DELETE_OLD, (e, len) => {
-      this.clipboardList = this.clipboardList.slice(0, this.clipboardList.length - len);
-    });
+    this.initEvent();
+    ipcRenderer.sendTo(remote.getGlobal('winId').worker, event.GET_ALL_TAG);
   },
 };
 </script>
@@ -60,14 +131,6 @@ export default {
     user-select none
     .search
       margin-right 15px
-    .add-tag
-      height 22px
-      width 22px
-      margin-left 15px
-      border-radius 5px
-      border 1px dashed gray
-      line-height 22px
-      text-align center
   .content
     height 100%
     display flex
