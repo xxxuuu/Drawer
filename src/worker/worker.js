@@ -1,5 +1,6 @@
 import event from '@/utils/event-topic';
 import db from './db';
+import service from './service';
 
 const path = window.require('path');
 const { exec } = window.require('child_process');
@@ -7,6 +8,7 @@ const fs = window.require('fs');
 
 const { clipboard, ipcRenderer, remote } = window.require('electron');
 
+/** 剪贴板更新 提取类型 插入数据库 */
 async function updateClipboard() {
   const formats = clipboard.availableFormats();
 
@@ -71,13 +73,13 @@ async function updateClipboard() {
   info.time = timestamp;
 
   // 插入成功就通知前端更新
-  db.storeClipboard(info).then((res) => {
-    if (res) {
-      ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.APPEND, info);
-    }
-  });
+  const success = await db.storeClipboard(info);
+  if (success) {
+    ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.APPEND, info);
+  }
 }
 
+/** 开启子进程监听剪贴板 */
 function nativeListen() {
   // eslint-disable-next-line no-undef
   const listenPath = path.join(__static, 'clipboard-listen');
@@ -103,23 +105,4 @@ db.getAllClipboard().then((res) => {
   nativeListen();
 });
 db.clearOutdatedClipboard();
-
-ipcRenderer.on(event.ADD_TAG, async (e, tagName) => {
-  const tagData = await db.storeTag(tagName);
-  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.ADD_TAG_RESP, tagData);
-});
-
-ipcRenderer.on(event.GET_ALL_TAG, async () => {
-  const tagData = await db.getAllTag();
-  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.GET_ALL_TAG_RESP, tagData);
-});
-
-ipcRenderer.on(event.GET_CLIPBOARD_BY_TAG, async (e, tagId) => {
-  const clipboardData = await db.getClipboardByTag(tagId);
-  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.GET_CLIPBOARD_BY_TAG_RESP, clipboardData);
-});
-
-ipcRenderer.on(event.STORE_CLIPBOARD_TO_TAG, async (e, cardData, tagId) => {
-  await db.storeClipboard2Tag(tagId, cardData);
-  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.STORE_CLIPBOARD_TO_TAG_RESP);
-});
+service.registerService();
