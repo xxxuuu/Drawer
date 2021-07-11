@@ -21,6 +21,10 @@ export default {
   ADD_TAG: 'clipboard-tag-add',
   /** 新增标签响应 */
   ADD_TAG_RESP: 'clipboard-tag-add-resp',
+  /** 删除标签 */
+  DEL_TAG: 'clipboard-tag-del',
+  /** 删除标签响应 */
+  DEL_TAG_RESP: 'clipboard-tag-del-resp',
   /** 初始化事件 */
   INIT: 'clipboard-init',
   /** 日志 */

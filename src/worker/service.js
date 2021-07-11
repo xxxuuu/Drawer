@@ -20,6 +20,10 @@ const tagService = {
   storeClipboard2Tag(cardData, tagId) {
     return db.storeClipboard2Tag(tagId, cardData);
   },
+  /** 删除标签 */
+  deleteTag(tagId) {
+    return db.deleteTag(tagId);
+  },
 };
 
 const eventServiceMap = {
@@ -27,6 +31,7 @@ const eventServiceMap = {
   [event.GET_ALL_TAG]: tagService.getAllTag,
   [event.GET_CLIPBOARD_BY_TAG]: tagService.getClipboardByTag,
   [event.STORE_CLIPBOARD_TO_TAG]: tagService.storeClipboard2Tag,
+  [event.DEL_TAG]: tagService.deleteTag,
 };
 
 export default {

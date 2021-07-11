@@ -64,6 +64,11 @@ export default {
     addTag(name) {
       ipcRenderer.sendTo(remote.getGlobal('winId').worker, event.ADD_TAG, name);
     },
+    /** 更新tags */
+    updateTags() {
+      this.tags = this.tags.slice(0, 1);
+      ipcRenderer.sendTo(remote.getGlobal('winId').worker, event.GET_ALL_TAG);
+    },
     /** 切换tag */
     switchTag(index) {
       this.nowTagIdx = index;
@@ -98,6 +103,7 @@ export default {
       ipcRenderer.on(event.GET_CLIPBOARD_BY_TAG_RESP, (e, clipboards) => {
         this.tagClipboardList = clipboards;
       });
+      ipcRenderer.on(event.DEL_TAG_RESP, this.updateTags);
     },
   },
   computed: {
@@ -110,7 +116,7 @@ export default {
   },
   created() {
     this.initEvent();
-    ipcRenderer.sendTo(remote.getGlobal('winId').worker, event.GET_ALL_TAG);
+    this.updateTags();
   },
 };
 </script>
