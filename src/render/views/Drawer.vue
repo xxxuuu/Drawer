@@ -58,7 +58,22 @@ export default {
         return newItem;
       });
 
-      remote.Menu.buildFromTemplate([{ label: '钉起来', submenu }]).popup();
+      const menuTemplate = [{
+        label: '钉起来',
+        submenu,
+      }, {
+        label: '删除',
+        enabled: this.nowTagIdx !== 0,
+        click: () => {
+          ipcRenderer.sendTo(
+            remote.getGlobal('winId').worker,
+            event.DEL_CLIPBOARD_TAG,
+            cardData.id,
+          );
+        },
+      }];
+
+      remote.Menu.buildFromTemplate(menuTemplate).popup();
     },
     /** 新增tag */
     addTag(name) {
@@ -69,6 +84,14 @@ export default {
       this.tags = this.tags.slice(0, 1);
       ipcRenderer.sendTo(remote.getGlobal('winId').worker, event.GET_ALL_TAG);
     },
+    /** 更新当前所在标签的剪贴板列表 */
+    updateTagClipboardList() {
+      ipcRenderer.sendTo(
+        remote.getGlobal('winId').worker,
+        event.GET_CLIPBOARD_BY_TAG,
+        this.tags[this.nowTagIdx].id,
+      );
+    },
     /** 切换tag */
     switchTag(index) {
       this.nowTagIdx = index;
@@ -77,11 +100,7 @@ export default {
         return;
       }
       // 切换后查询对应tag的数据
-      ipcRenderer.sendTo(
-        remote.getGlobal('winId').worker,
-        event.GET_CLIPBOARD_BY_TAG,
-        this.tags[this.nowTagIdx].id,
-      );
+      this.updateTagClipboardList();
     },
     /** 初始化事件监听 */
     initEvent() {
@@ -104,6 +123,7 @@ export default {
         this.tagClipboardList = clipboards;
       });
       ipcRenderer.on(event.DEL_TAG_RESP, this.updateTags);
+      ipcRenderer.on(event.DEL_CLIPBOARD_TAG_RESP, this.updateTagClipboardList);
     },
   },
   computed: {

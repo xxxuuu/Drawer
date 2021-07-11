@@ -98,6 +98,10 @@ export default {
     }
     await tx.done;
   },
+  /** 删除标签中的指定剪贴板 */
+  async deleteTagClipboard(clipboardId) {
+    (await db).delete(TAG_CLIPBOARD_STORE_NAME, clipboardId);
+  },
   /** 把剪贴板钉到某个标签里 */
   async storeClipboard2Tag(tagId, clipboardVal) {
     const val = clipboardVal;

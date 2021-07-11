@@ -13,6 +13,10 @@ export default {
   STORE_CLIPBOARD_TO_TAG: 'clipboard-store-to-tag',
   /** 存储剪贴板到标签的响应 */
   STORE_CLIPBOARD_TO_TAG_RESP: 'clipboard-store-to-tag-resp',
+  /** 删除标签中的剪贴板 */
+  DEL_CLIPBOARD_TAG: 'clipboard-del-tag',
+  /** 删除标签中的剪贴板的响应 */
+  DEL_CLIPBOARD_TAG_RESP: 'clipboard-del-tag-resp',
   /** 获取所有标签 */
   GET_ALL_TAG: 'clipboard-get-all-tag',
   /** 获取所有标签响应 */
