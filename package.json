@@ -19,6 +19,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.6.5",
+    "dayjs": "^1.10.6",
     "idb": "^6.0.0",
     "rtf.js": "^3.0.7",
     "vue": "^2.6.11",
