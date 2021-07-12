@@ -12,6 +12,7 @@
 </template>
 
 <script>
+import dayjs from 'dayjs';
 import ImgCard from './ImgCard.vue';
 import TextCard from './TextCard.vue';
 import ColorCard from './ColorCard.vue';
@@ -41,8 +42,7 @@ export default {
   },
   filters: {
     dateFormat(timestamp) {
-      const date = new Date(timestamp);
-      return `${date.getMonth() + 1}/${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+      return dayjs(timestamp).format('MM/DD HH:mm');
     },
   },
   computed: {
