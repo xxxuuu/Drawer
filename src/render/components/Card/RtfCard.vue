@@ -25,7 +25,7 @@ export default {
     this.doc.render().then((elements) => {
       elements.forEach((e) => {
         // 渲染tab缩进
-        e.style.whiteSpace = 'pre';
+        e.style.whiteSpace = 'pre-wrap';
         this.rtfHtml += e.outerHTML;
       });
     }).catch((err) => {
