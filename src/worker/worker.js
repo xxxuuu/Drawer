@@ -21,12 +21,14 @@ async function updateClipboard() {
     // 文件
     info.data = filePath;
     info.type = 'file';
-    const previewImg = clipboard.readImage('png');
-    if (previewImg.isEmpty()) {
-      // TODO: 获取预览图在某些类型的文件上不生效 只能先获取图标
+    try {
+      info.preview = (await remote.nativeImage.createThumbnailFromPath(
+        filePath,
+        { width: 256, height: 256 },
+      )).toDataURL();
+    } catch (err) {
+      console.warn(err);
       info.preview = (await remote.app.getFileIcon(filePath)).toDataURL();
-    } else {
-      info.preview = previewImg.toDataURL();
     }
     info.description = filePath;
   } else if (formats.indexOf('text/rtf') >= 0) {

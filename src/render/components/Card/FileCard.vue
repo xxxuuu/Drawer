@@ -13,7 +13,7 @@ export default {
   mixins: [BaseCard],
   methods: {
     copyOnCard() {
-      // TODO: 多文件
+      // TODO: 多文件&文件夹
       // 复制文件到剪贴板
       // https://github.com/electron/electron/issues/9035
       clipboard.writeBuffer(
