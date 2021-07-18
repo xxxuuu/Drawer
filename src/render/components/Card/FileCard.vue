@@ -1,5 +1,5 @@
 <template>
-  <div class="file-card">
+  <div class="file-card" @click="previewFile">
     <img class="img" :src="info.preview" alt="">
   </div>
 </template>
@@ -7,7 +7,7 @@
 <script>
 import BaseCard from './BaseCard.vue';
 
-const { clipboard } = window.require('electron');
+const { clipboard, remote } = window.require('electron');
 
 export default {
   mixins: [BaseCard],
@@ -31,6 +31,10 @@ export default {
       new Notification('复制成功', {
         body: `已复制到剪贴板：「文件 ${this.info.data}」`,
       }).show();
+    },
+    previewFile() {
+      const mainWindow = remote.getCurrentWindow();
+      mainWindow.previewFile(this.info.data);
     },
   },
 };
