@@ -54,6 +54,7 @@ async function createWindow() {
     mainWindow.setSize(screenWidth, height);
     mainWindow.setPosition(0, windowY, true);
     mainWindow.setVisibleOnAllWorkspaces(false);
+    mainWindow.focus();
     return;
   }
 
@@ -68,6 +69,8 @@ async function createWindow() {
     show: false,
     resizable: false,
     alwaysOnTop: true,
+    visualEffectState: 'active',
+    vibrancy: 'light',
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,

@@ -146,7 +146,6 @@ export default {
   display flex
   flex-direction column
   height 100%
-  background-color #dbe2e4
   .header
     width 100%
     display flex
@@ -167,5 +166,4 @@ export default {
       display flex
       flex-direction row
       align-items center
-      background-color #dbe2e4
 </style>

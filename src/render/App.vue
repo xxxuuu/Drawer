@@ -8,5 +8,5 @@
 html, body, #app
   margin 0
   height 100%
-  background rgba(0,0,0,0)
+  background rgba(255,255,255,0.1)
 </style>
