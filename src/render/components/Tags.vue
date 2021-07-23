@@ -93,8 +93,11 @@ export default {
     font-size 14px
     border-radius 4px
     padding 6px 8px
+    transition box-shadow 0.5s
   .active
-    background #bbb
+    background rgba(255,255,255,0.4)
+    box-shadow 0 0 15px rgba(0,0,0,0.15)
+    transition box-shadow 0.5s
   .tags:not(:first-child)
     margin-left 10px
   .add-tag
@@ -107,7 +110,7 @@ export default {
     text-align center
   .add-input
     display inline-block
-    background #bbb
+    background rgba(0,0,0,0.3)
     margin-left 15px
     padding 6px 8px
     height 22px

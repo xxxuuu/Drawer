@@ -5,14 +5,14 @@
       <tags class="tags" :tags="tags" @add-tag="addTag" @switch-tag="switchTag" />
     </div>
     <div class="content">
-      <div class="card-list">
+      <transition-group class="card-list" name="card-list">
         <card
           @contextmenu.native="cardContextMenu(i)"
           v-for="(i) in activeList"
           :key="i.time"
           :info="i"
         />
-      </div>
+      </transition-group>
     </div>
   </div>
 </template>
@@ -166,4 +166,11 @@ export default {
       display flex
       flex-direction row
       align-items center
+      & > *
+        transition all 0.4s
+      .card-list-enter, .card-list-leave-to
+        opacity 0
+        transform translateY(30px)
+      .card-list-leave-active
+        position absolute
 </style>
