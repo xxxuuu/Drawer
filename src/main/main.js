@@ -119,7 +119,13 @@ app.whenReady().then(async () => {
   tray.createTray();
 
   // 全局快捷键 弹出窗口
-  globalShortcut.register('Shift+CommandOrControl+V', createWindow);
+  globalShortcut.register('Shift+CommandOrControl+V', () => {
+    if (mainWindow.isVisible()) {
+      mainWindow.hide();
+    } else {
+      createWindow();
+    }
+  });
 });
 
 // Exit cleanly on request from parent process in development mode.
