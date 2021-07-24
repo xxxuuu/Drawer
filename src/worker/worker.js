@@ -101,10 +101,7 @@ function nativeListen() {
   });
 }
 
-// 第一次首先获取数据库所有数据 然后开始监听
-db.getAllClipboard().then((res) => {
-  ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.INIT, res);
-  nativeListen();
-});
+// 启动监听、清除过期剪贴板、注册服务
+nativeListen();
 db.clearOutdatedClipboard();
 service.registerService();

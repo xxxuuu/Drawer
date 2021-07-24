@@ -79,6 +79,10 @@ export default {
     addTag(name) {
       ipcRenderer.sendTo(remote.getGlobal('winId').worker, event.ADD_TAG, name);
     },
+    /** 获取所有剪贴板 */
+    getAllClipboard() {
+      ipcRenderer.sendTo(remote.getGlobal('winId').worker, event.INIT);
+    },
     /** 更新tags */
     updateTags() {
       this.tags = this.tags.slice(0, 1);
@@ -104,7 +108,7 @@ export default {
     },
     /** 初始化事件监听 */
     initEvent() {
-      ipcRenderer.on(event.INIT, (e, data) => {
+      ipcRenderer.on(event.INIT_RESP, (e, data) => {
         this.clipboardList = data.reverse();
       });
       ipcRenderer.on(event.APPEND, (e, data) => {
@@ -136,6 +140,7 @@ export default {
   },
   created() {
     this.initEvent();
+    this.getAllClipboard();
     this.updateTags();
   },
 };

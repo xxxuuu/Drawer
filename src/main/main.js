@@ -48,12 +48,9 @@ async function createWindow() {
   const windowY = screenHeight - height;
 
   if (mainWindow) {
-    // 令其能显示在当前桌面（工作区）：https://github.com/electron/electron/issues/5362
-    mainWindow.setVisibleOnAllWorkspaces(true);
     mainWindow.show();
     mainWindow.setSize(screenWidth, height);
     mainWindow.setPosition(0, windowY, true);
-    mainWindow.setVisibleOnAllWorkspaces(false);
     mainWindow.focus();
     return;
   }
@@ -82,12 +79,10 @@ async function createWindow() {
 
   mainWindow = win;
   global.winId.mainWindow = win.id;
-  win.on('blur', () => {
-    win.hide();
-    app.dock.hide();
-  });
+  win.on('blur', win.hide);
   win.setAlwaysOnTop(true, 'pop-up-menu');
   win.setPosition(0, windowY, true);
+  win.setVisibleOnAllWorkspaces(true);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL);
@@ -97,8 +92,6 @@ async function createWindow() {
   }
 }
 
-// 隐藏dock栏图标
-app.dock.hide();
 // 开机自启
 app.setLoginItemSettings({
   openAtLogin: !isDevelopment,
@@ -114,9 +107,11 @@ app.whenReady().then(async () => {
     }
   }
 
-  createWindow();
-  createWorker();
+  await createWorker();
+  await createWindow();
+  // 创建顶栏菜单 隐藏dock栏图标
   tray.createTray();
+  app.dock.hide();
 
   // 全局快捷键 弹出窗口
   globalShortcut.register('Shift+CommandOrControl+V', () => {

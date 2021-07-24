@@ -29,8 +29,9 @@ export default {
   DEL_TAG: 'clipboard-tag-del',
   /** 删除标签响应 */
   DEL_TAG_RESP: 'clipboard-tag-del-resp',
-  /** 初始化事件 */
+  /** 初始化 获取所有剪贴板 */
   INIT: 'clipboard-init',
+  INIT_RESP: 'clipboard-init-resp',
   /** 日志 */
   LOG: 'clipboard-log',
 };

@@ -3,6 +3,13 @@ import db from './db';
 
 const { ipcRenderer, remote } = window.require('electron');
 
+const clipboardService = {
+  /** 获取所有剪贴板 */
+  getAllClipboard() {
+    return db.getAllClipboard();
+  },
+};
+
 const tagService = {
   /** 新增标签 返回插入到数据库中的标签数据  */
   addTag(tagName) {
@@ -31,6 +38,7 @@ const tagService = {
 };
 
 const eventServiceMap = {
+  [event.INIT]: clipboardService.getAllClipboard,
   [event.ADD_TAG]: tagService.addTag,
   [event.GET_ALL_TAG]: tagService.getAllTag,
   [event.GET_CLIPBOARD_BY_TAG]: tagService.getClipboardByTag,
