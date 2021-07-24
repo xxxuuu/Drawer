@@ -19,6 +19,8 @@ import ColorCard from './ColorCard.vue';
 import FileCard from './FileCard.vue';
 import RtfCard from './RtfCard.vue';
 
+const { remote } = window.require('electron');
+
 export default {
   props: [
     'info',
@@ -37,6 +39,7 @@ export default {
   methods: {
     // 从卡片中复制
     copyOnCard() {
+      remote.getGlobal('sync').flag = remote.getGlobal('sync').flag + 1;
       this.$refs.cardInstance.copyOnCard();
     },
   },

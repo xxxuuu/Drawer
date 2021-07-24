@@ -94,6 +94,10 @@ function nativeListen() {
   console.log(listenPath);
   childProcess.stdout.on('data', (data) => {
     console.log(data);
+    if (remote.getGlobal('sync').flag > 0) {
+      remote.getGlobal('sync').flag = remote.getGlobal('sync').flag - 1;
+      return;
+    }
     updateClipboard();
   });
   remote.app.on('before-quit', () => {

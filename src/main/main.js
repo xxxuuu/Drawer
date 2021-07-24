@@ -16,6 +16,10 @@ global.winId = {
   mainWindow: null,
   worker: null,
 };
+// 标志值 防止从历史剪贴板中复制时又被当做新的数据添加进来
+global.sync = {
+  flag: 0,
+};
 
 // worker进程 通过隐藏窗口实现
 async function createWorker() {
