@@ -69,7 +69,6 @@ export default {
     await (await db).delete(CLIPBOARD_STORE_NAME, IDBKeyRange.upperBound(timestamp - day));
     // 需要通知前端删除列表UI上的相关部分
     ipcRenderer.sendTo(remote.getGlobal('winId').mainWindow, event.DELETE_OLD, delLen);
-    setTimeout(this.clearOutdatedClipboard, 10000);
   },
   /** 获取所有标签 */
   async getAllTag() {

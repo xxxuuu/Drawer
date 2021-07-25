@@ -107,5 +107,5 @@ function nativeListen() {
 
 // 启动监听、清除过期剪贴板、注册服务
 nativeListen();
-db.clearOutdatedClipboard();
+setInterval(db.clearOutdatedClipboard, 10000);
 service.registerService();
