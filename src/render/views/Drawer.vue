@@ -1,10 +1,10 @@
 <template>
-  <div class="root">
+  <div class="root" @wheel="handleWheel" >
     <div class="header">
       <!-- <div class="search">🔍</div> -->
       <tags class="tags" :tags="tags" @add-tag="addTag" @switch-tag="switchTag" />
     </div>
-    <div class="content">
+    <div class="content" ref="content">
       <transition-group class="card-list" name="card-list">
         <card
           @contextmenu.native="cardContextMenu(i)"
@@ -105,6 +105,13 @@ export default {
       }
       // 切换后查询对应tag的数据
       this.updateTagClipboardList();
+    },
+    /** 鼠标滚动事件 */
+    handleWheel(e) {
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+        return;
+      }
+      this.$refs.content.scrollLeft += e.deltaY;
     },
     /** 初始化事件监听 */
     initEvent() {
