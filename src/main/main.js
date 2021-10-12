@@ -16,6 +16,9 @@ global.winId = {
   mainWindow: null,
   worker: null,
 };
+global.windows = {
+  mainWindow: null,
+};
 // 标志值 防止从历史剪贴板中复制时又被当做新的数据添加进来
 global.sync = {
   flag: 0,
@@ -83,7 +86,11 @@ async function createWindow() {
 
   mainWindow = win;
   global.winId.mainWindow = win.id;
-  win.on('blur', win.hide);
+  global.windows.mainWindow = win;
+  win.on('blur', () => {
+    win.hide();
+    app.hide();
+  });
   win.setAlwaysOnTop(true, 'pop-up-menu');
   win.setPosition(0, windowY, true);
   win.setVisibleOnAllWorkspaces(true);
@@ -111,6 +118,8 @@ app.whenReady().then(async () => {
     }
   }
 
+  // https://github.com/electron/electron/issues/18397
+  app.allowRendererProcessReuse = false;
   await createWorker();
   await createWindow();
   // 创建顶栏菜单 隐藏dock栏图标

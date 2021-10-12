@@ -2,7 +2,8 @@
   <div></div>
 </template>
 <script>
-const { clipboard } = window.require('electron');
+const { clipboard, remote } = window.require('electron');
+const robotjs = window.require('robotjs');
 
 export default {
   props: [
@@ -18,6 +19,11 @@ export default {
   methods: {
     copyOnCard() {
       clipboard.writeText(this.info.data);
+      // 文本类的直接粘贴
+      if (this.info.type === 'text' || this.info.type === 'color' || this.info.type === 'url') {
+        remote.getGlobal('windows').mainWindow.hide();
+        robotjs.typeString(this.info.data);
+      }
       new Notification('复制成功', {
         body: `已复制到剪贴板：${this.info.data}`,
       }).show();
