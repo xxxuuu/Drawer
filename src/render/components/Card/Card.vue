@@ -40,6 +40,7 @@ export default {
     // 从卡片中复制
     copyOnCard() {
       remote.getGlobal('sync').flag = remote.getGlobal('sync').flag + 1;
+      remote.getGlobal('windows').mainWindow.hide();
       this.$refs.cardInstance.copyOnCard();
     },
   },

@@ -2,7 +2,7 @@
   <div></div>
 </template>
 <script>
-const { clipboard, remote } = window.require('electron');
+const { clipboard } = window.require('electron');
 const robotjs = window.require('robotjs');
 
 export default {
@@ -19,11 +19,10 @@ export default {
   methods: {
     copyOnCard() {
       clipboard.writeText(this.info.data);
-      // 文本类的直接粘贴
-      if (this.info.type === 'text' || this.info.type === 'color' || this.info.type === 'url') {
-        remote.getGlobal('windows').mainWindow.hide();
+      // 让到下一个event loop再粘贴 不然太快的话窗口还来不及隐藏 导致前面几个文字没能输出到
+      setTimeout(() => {
         robotjs.typeString(this.info.data);
-      }
+      }, 0);
       new Notification('复制成功', {
         body: `已复制到剪贴板：${this.info.data}`,
       }).show();
