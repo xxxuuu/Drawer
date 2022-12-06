@@ -1,6 +1,6 @@
 # Drawer
 
-<div align=center><img width="150" height="150" src="./build/icons/icon_512x512.png"/></div>
+<div align=center><img width="150" height="150" src="./src-tauri/icons/icon.png"/></div>
 <br/>
 
 [![GitHub](https://img.shields.io/github/license/xxxuuu/Drawer?style=flat-square)](https://github.com/xxxuuu/Drawer/blob/master/LICENSE)
