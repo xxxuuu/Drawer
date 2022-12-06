@@ -8,7 +8,7 @@
 [![GitHub release (latest by date)](https://img.shields.io/github/v/release/xxxuuu/Drawer?style=flat-square)](https://github.com/xxxuuu/Drawer/releases)
 ![platforms](https://img.shields.io/badge/platforms-macOS-blue?style=flat-square)
 
-Drawer 是一个 macOS 上的历史剪贴板应用，基于 Electron + Vue，支持多种类型数据及标签收藏等功能
+Drawer 是一个 macOS 上的历史剪贴板应用，基于 Rust + Tauri，支持多种类型数据及标签收藏等功能
 
 - 使用 <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>V</kbd> 呼出 Drawer 窗口，再按一次可隐藏
 - 双击相应卡片进行复制
