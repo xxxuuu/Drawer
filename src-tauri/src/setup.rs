@@ -1,6 +1,6 @@
 use std::fs;
 
-use tauri::api::dialog::{self, MessageDialogBuilder, MessageDialogButtons, MessageDialogKind};
+use tauri::api::dialog::MessageDialogBuilder;
 use tauri::{Manager, Position, LogicalPosition, LogicalSize, Size, App, GlobalShortcutManager, WindowEvent, SystemTray, SystemTrayMenu, CustomMenuItem, SystemTrayEvent};
 use window_vibrancy::NSVisualEffectMaterial;
 
@@ -28,14 +28,13 @@ fn set_window(app: &mut App) -> SetupResult {
     window_vibrancy::apply_vibrancy(win, NSVisualEffectMaterial::Popover, None, None)
         .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
     // 将窗口设置成类似 NSPanel 的模式 https://github.com/tauri-apps/tauri/issues/2258
-    // TODO: Dock栏层级比窗口高
+    // FIXME: Dock栏层级比窗口高
     app.set_activation_policy(tauri::ActivationPolicy::Accessory);
     Ok(())
 }
 
 /// 设置菜单托盘
 fn set_tray(app: &mut App) -> SetupResult {
-    // FIXME: dialog的图标占不支持修改 或许得考虑多窗口的方式重新实现一个
     let app_handle = app.handle();
     SystemTray::new()
       .with_menu(
