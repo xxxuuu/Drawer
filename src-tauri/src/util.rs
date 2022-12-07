@@ -1,6 +1,7 @@
 use swift_rs::*;
 
 swift_fn!(get_file_thumbnail_base64(path: &str) -> String);
+swift_fn!(paste() -> String);
 
 pub enum Data {
     Raw(Vec<u8>),
@@ -23,6 +24,16 @@ impl QuickLook {
         // FIXME: 很多文件获取的是blank page，貌似icon和thumbnail是分开的
         let thumbnail = get_file_thumbnail_base64(path.into());
         Ok(Data::Base64(thumbnail.to_string()))
+    }
+}
+
+pub struct ClipboardUtil;
+
+impl ClipboardUtil {
+    /// 向系统发送粘贴事件
+    #[cfg(target_os = "macos")]
+    pub fn pasteEvent() -> String {
+        paste().to_string()
     }
 }
 

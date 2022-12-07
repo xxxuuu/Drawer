@@ -141,6 +141,8 @@ pub fn paste(app: AppHandle, id: i64) -> CmdResult<()> {
                 Err(err) => return Err(err.to_string())
             };
             clipboard.inner().paste(content)?;
+            app.hide().unwrap();
+            println!("paste event result: {}", util::ClipboardUtil::pasteEvent());
         }
         Err(err) => return Err(err.to_string())
     }

@@ -161,7 +161,6 @@ impl InnerManger {
 
     /// 粘贴剪贴板内容
     fn paste(&mut self, content: ClipboardContent) -> Result<(), String> {
-        // TODO: 自动键入内容
         let mut formats = vec![PREVENT_FORMAT];
         for data in content.data {
             match data {
