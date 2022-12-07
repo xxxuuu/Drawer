@@ -1,6 +1,6 @@
 <template>
   <div class="img-card">
-    <img class="img" :src="`data:image/png;base64,${info.data}`" alt=""/>
+    <img class="img" alt="" ref="img" />
   </div>
 </template>
 
@@ -8,8 +8,18 @@
 import BaseCard from './BaseCard.vue';
 
 export default {
-  mixins: [BaseCard]
-  // TODO: 优化base64插入性能
+  mixins: [BaseCard],
+  methods: {
+    setImage(b64str, target) {
+      return fetch(b64str).then(data => data.blob()).then((b) => {
+        const url = URL.createObjectURL(b);
+        target.src = url;
+      })
+    }
+  },
+  mounted() {
+    this.setImage(`data:image/png;base64,${this.info.data}`, this.$refs.img);
+  },
 };
 </script>
 

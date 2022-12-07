@@ -38,10 +38,12 @@ export default {
   methods: {
     /** 粘贴卡片内容 */
     paste() {
-      invoke("paste", { id: this.info.id }).catch(err => {
-        console.log(err);
-        alert(err);
-      })
+      invoke("paste", { id: this.info.id })
+        .then(res => console.log(`paste event result: ${res}`))
+        .catch(err => {
+          console.log(err);
+          alert(err);
+        })
     },
     /** 日期格式化 */
     dateFormat(timestamp) {
