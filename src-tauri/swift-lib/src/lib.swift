@@ -61,3 +61,8 @@ func paste() -> SRString {
     }
     return SRString();
 }
+
+@_cdecl("set_window_top_level")
+func setWindowTopLevel(window: NSWindow) {
+    window.level = .mainMenu + 1
+}

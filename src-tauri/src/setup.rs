@@ -6,6 +6,7 @@ use window_vibrancy::NSVisualEffectMaterial;
 
 use crate::cmd::ClipboardRecordVO;
 use crate::storage::{StorageConn, ClipboardRecord};
+use crate::util::{self, WindowUtil};
 use crate::{clipboard::{ClipboardManager, ClipboardContent}, storage};
 use crate::event::Topic;
 
@@ -23,12 +24,13 @@ fn set_window(app: &mut App) -> SetupResult {
     let screen_size = monitor.size().to_logical::<f64>(monitor.scale_factor());
     win.set_size(Size::Logical(LogicalSize::new(screen_size.width as f64, HEIGHT)))?;
     win.set_position(Position::Logical(LogicalPosition::new(0.0, screen_size.height as f64 - HEIGHT)))?;
+    // 设置窗口层级为顶级（高于菜单栏和Dock，Tauri默认设置会在Dock栏下面）
+    WindowUtil::set_window_top_level(&win);
     // 设置毛玻璃背景
     #[cfg(target_os = "macos")]
     window_vibrancy::apply_vibrancy(win, NSVisualEffectMaterial::Popover, None, None)
         .expect("Unsupported platform! 'apply_vibrancy' is only supported on macOS");
     // 将窗口设置成类似 NSPanel 的模式 https://github.com/tauri-apps/tauri/issues/2258
-    // FIXME: Dock栏层级比窗口高
     app.set_activation_policy(tauri::ActivationPolicy::Accessory);
     Ok(())
 }
