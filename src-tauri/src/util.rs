@@ -1,5 +1,6 @@
 use swift_rs::*;
 
+swift_fn!(get_file_icon_base64(path: &str) -> String);
 swift_fn!(get_file_thumbnail_base64(path: &str) -> String);
 swift_fn!(paste() -> String);
 
@@ -21,8 +22,10 @@ impl QuickLook {
     /// 生成缩略图
     #[cfg(target_os = "macos")]
     pub fn thumbnail(path: &str) -> Result<Data, String> {
-        // FIXME: 很多文件获取的是blank page，貌似icon和thumbnail是分开的
-        let thumbnail = get_file_thumbnail_base64(path.into());
+        let mut thumbnail = get_file_thumbnail_base64(path.into());
+        if thumbnail.is_empty() {
+            thumbnail = get_file_icon_base64(path.into());
+        }
         Ok(Data::Base64(thumbnail.to_string()))
     }
 }
