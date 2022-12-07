@@ -32,7 +32,7 @@ pub struct ClipboardUtil;
 impl ClipboardUtil {
     /// 向系统发送粘贴事件
     #[cfg(target_os = "macos")]
-    pub fn pasteEvent() -> String {
+    pub fn paste_event() -> String {
         paste().to_string()
     }
 }

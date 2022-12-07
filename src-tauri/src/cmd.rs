@@ -131,7 +131,7 @@ pub fn delete_tag(app: AppHandle, id: i64) -> CmdResult<()> {
 
 /// 粘贴一条剪贴板记录的内容
 #[tauri::command]
-pub fn paste(app: AppHandle, id: i64) -> CmdResult<()> {
+pub fn paste(app: AppHandle, id: i64) -> CmdResult<String> {
     let db = app.state::<StorageConn>();
     let clipboard = app.state::<ClipboardManager>();
     match db.inner().get_record(id) {
@@ -142,9 +142,10 @@ pub fn paste(app: AppHandle, id: i64) -> CmdResult<()> {
             };
             clipboard.inner().paste(content)?;
             app.hide().unwrap();
-            println!("paste event result: {}", util::ClipboardUtil::pasteEvent());
+            let result = util::ClipboardUtil::paste_event();
+            println!("paste event result: {}", result);
+            Ok(result)
         }
         Err(err) => return Err(err.to_string())
     }
-    Ok(())
 }
