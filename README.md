@@ -13,5 +13,5 @@ Drawer 是一个 macOS 上的历史剪贴板应用，基于 Rust + Tauri，支�
 - 使用 <kbd>⇧</kbd> + <kbd>⌘</kbd> + <kbd>V</kbd> 呼出 Drawer 窗口，再按一次可隐藏
 - 双击相应卡片进行复制
 
-![preview-1](./img/img-1.png)
-![preview-2](./img/img-2.png)
+![preview-1](./docs/img/img-1.png)
+![preview-2](./docs/img/img-2.png)
